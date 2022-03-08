@@ -1,0 +1,60 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+    id 'maven-publish'
+}
+
+android {
+    compileSdk 31
+
+    defaultConfig {
+        minSdk 21
+        targetSdk 31
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+        kotlinOptions.freeCompilerArgs += ['-module-name', "com.mcxinyu.sqliteso"]
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+                groupId = "com.mcxinyu.sqliteso"
+                artifactId = "sqliteso"
+                version = "1.0.0"
+            }
+        }
+
+        repositories {
+            maven {
+                allowInsecureProtocol true
+                url = "/repo"
+//                credentials {
+//                    username = MAVEN_USERNAME
+//                    password = MAVEN_PASSWORD
+//                }
+            }
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ["*.jar", "*.aar"], dir: "src/main/jniLibs")
+}
